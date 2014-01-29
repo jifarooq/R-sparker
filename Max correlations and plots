@@ -1,14 +1,19 @@
+# read data and define it as new variables
 x = read.csv("Corruption vs Road Fatalities.csv")
 country = x$Country
 corrupt = as.numeric(x$Corruption.Perception.Index)
 fatal = as.numeric(x$Road.fatalities.per.100k.people)
 
+# get the population correlation
 p = cor(corrupt,fatal)
 
+# define some more variables and a blank matrix to store indices and correlations
 j = 0; y = matrix(0,0,26)
 corThresh = -.85
 loopLength = 10000
 
+# take random samples of size 25 and compute the correlation  
+# if it's below corThresh, bind the index to a matrix y and store the correlation coefficient in the last column
 for (i in 1:loopLength) {
 
     index = sample(1:length(corrupt),25)
@@ -21,6 +26,7 @@ for (i in 1:loopLength) {
     }
 }
 
+# the best index found to maximize the sample correlation
 bestIndex=c(1,4,6,16,33,37,39,53,98,101,110,111,113,120,122,123,125,128,130,137,139,149,151,157,161)
 cor(corrupt[bestIndex],fatal[bestIndex])
 
@@ -34,8 +40,8 @@ abline(mod, col="Red")
 #identify(corrupt, fatal, country)
 
 #Identify countries
-#index2 = sample(1:length(fatal),10)
-index2 = sample(bestIndex,10)
+index2 = sample(1:length(fatal),10)
+#index2 = sample(bestIndex2,10)
 text(corrupt[index2],fatal[index2],country[index2])
 
 
