@@ -1,0 +1,41 @@
+x = read.csv("Corruption vs Road Fatalities.csv")
+country = x$Country
+corrupt = as.numeric(x$Corruption.Perception.Index)
+fatal = as.numeric(x$Road.fatalities.per.100k.people)
+
+p = cor(corrupt,fatal)
+
+j = 0; y = matrix(0,0,26)
+corThresh = -.85
+loopLength = 10000
+
+for (i in 1:loopLength) {
+
+    index = sample(1:length(corrupt),25)
+    r = cor(corrupt[index],fatal[index])
+    if (r <= corThresh) {
+        j = j+1
+        y = rbind(y,as.numeric(j))
+        y[j,1:25] = index
+        y[j,26] = cor(corrupt[index],fatal[index])
+    }
+}
+
+bestIndex=c(1,4,6,16,33,37,39,53,98,101,110,111,113,120,122,123,125,128,130,137,139,149,151,157,161)
+cor(corrupt[bestIndex],fatal[bestIndex])
+
+#Build linear model
+mod = lm(fatal~corrupt)
+summary(mod)
+
+#Plot data and add model line
+plot(corrupt, fatal, xlab="Corruption Perception Index", ylab="Road fatalities per 100k people", main="Road Fatalities and Corruption", col="Green", pch=16)
+abline(mod, col="Red")
+#identify(corrupt, fatal, country)
+
+#Identify countries
+#index2 = sample(1:length(fatal),10)
+index2 = sample(bestIndex,10)
+text(corrupt[index2],fatal[index2],country[index2])
+
+
