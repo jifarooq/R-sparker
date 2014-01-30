@@ -1,0 +1,20 @@
+bootstrap <- function(origsample, funct, numSamples){
+	
+	#apply the passed function (such as mean) to the original sample
+	xbar <- funct(origsample)
+	
+	#define n as the length of the original sample.  B is how many iterations you want
+	n = length(origsample); B = numSamples
+	
+	# define a matrix A to store everything.  Then take samples of size n B times with replacement and store in Y
+	A <- matrix(0, nrow = n, ncol = B)
+	for (i in 1:B){
+		A[,i] <- sample(origsample, n, replace=TRUE)}
+	
+	# apply the passed function to all B samples 
+	Y <- apply(A, 2, funct)
+	
+	# calculate the mean squared error for each sample against that of the original sample
+	MSE <- mean((Y-rep(xbar,B))^2)
+	return(MSE)} 
+	
